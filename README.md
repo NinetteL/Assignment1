@@ -1,6 +1,8 @@
-Assignment 1
+Assignment
 ================
 Ninette Lotter
+
+##### Assignment 1
 
 Hello Octocat
 -------------
@@ -9,20 +11,28 @@ I love Octocat. She's the coolest cat in town.
 
 ![](https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/images/octocat.png)
 
+##### Assignment 2
+
+###### Quick look
+
 ``` r
+# Load data
 data("anscombe")
+# Dimensions
 dim(anscombe)
 ```
 
     ## [1] 11  8
 
 ``` r
+# Column names
 names(anscombe)
 ```
 
     ## [1] "x1" "x2" "x3" "x4" "y1" "y2" "y3" "y4"
 
 ``` r
+# First and last 6 lines of data
 head(anscombe, n=6)
 ```
 
@@ -47,6 +57,7 @@ tail(anscombe, n=6)
     ## 11  5  5  5  8  5.68 4.74 5.73  6.89
 
 ``` r
+# Summary statistics
 summary(anscombe)
 ```
 
@@ -65,4 +76,134 @@ summary(anscombe)
     ##  3rd Qu.: 8.570   3rd Qu.:8.950   3rd Qu.: 7.98   3rd Qu.: 8.190  
     ##  Max.   :10.840   Max.   :9.260   Max.   :12.74   Max.   :12.500
 
+##### Assignment 3
+
+###### XY Plot
+
 <img src="./figures/xy_plot-1.svg" style="display: block; margin: auto;" />
+
+##### Assignment 4
+
+###### Importing data
+
+``` r
+#Use readr package to read data from url and store dataframe into object called 'df'.
+df <- read.csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/analgesic.csv')
+```
+
+###### Summarising a dataset
+
+``` r
+# Dimensions 
+dim(df)
+```
+
+    ## [1] 40  5
+
+``` r
+# Names of columns
+names(df)
+```
+
+    ## [1] "ID"            "Group"         "Measurement_1" "Measurement_2"
+    ## [5] "Measurement_3"
+
+``` r
+# First and last 6 lines of data
+head(df, n=6)
+```
+
+    ##   ID     Group Measurement_1 Measurement_2 Measurement_3
+    ## 1  1 Analgesic            26            26            21
+    ## 2  2 Analgesic            29            26            23
+    ## 3  3 Analgesic            24            28            22
+    ## 4  4 Analgesic            25            22            24
+    ## 5  5 Analgesic            24            28            23
+    ## 6  6 Analgesic            22            23            26
+
+``` r
+tail(df, n=6)
+```
+
+    ##    ID   Group Measurement_1 Measurement_2 Measurement_3
+    ## 35 35 Placebo            17            21            15
+    ## 36 36 Placebo            19            17            15
+    ## 37 37 Placebo            14            19            13
+    ## 38 38 Placebo            17            19            13
+    ## 39 39 Placebo            11            20            18
+    ## 40 40 Placebo            15            18            12
+
+``` r
+# Summary statistics
+summary(df)
+```
+
+    ##        ID              Group    Measurement_1   Measurement_2 
+    ##  Min.   : 1.00   Analgesic:20   Min.   :10.00   Min.   : 8.0  
+    ##  1st Qu.:10.75   Placebo  :20   1st Qu.:17.00   1st Qu.:17.0  
+    ##  Median :20.50                  Median :20.00   Median :20.0  
+    ##  Mean   :20.50                  Mean   :20.12   Mean   :20.7  
+    ##  3rd Qu.:30.25                  3rd Qu.:24.00   3rd Qu.:25.0  
+    ##  Max.   :40.00                  Max.   :30.00   Max.   :32.0  
+    ##  Measurement_3  
+    ##  Min.   :12.00  
+    ##  1st Qu.:16.00  
+    ##  Median :20.50  
+    ##  Mean   :20.52  
+    ##  3rd Qu.:24.25  
+    ##  Max.   :30.00
+
+###### Tidying data
+
+``` r
+# Load packages
+library(tidyr)
+```
+
+    ## Warning: package 'tidyr' was built under R version 3.2.5
+
+``` r
+library(dplyr)
+```
+
+    ## Warning: package 'dplyr' was built under R version 3.2.5
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+# Tidy data from wide to long format
+gathered <- gather(df, key = Measurement, value = Value, Measurement_1:Measurement_3)
+# Summarize data by calculating mean across the measurements for each individual
+summary <- summarise(group_by(gathered, ID), mean(Value))
+# Print final data frame
+print(summary)
+```
+
+    ## Source: local data frame [40 x 2]
+    ## 
+    ##       ID mean(Value)
+    ##    (int)       (dbl)
+    ## 1      1    24.33333
+    ## 2      2    26.00000
+    ## 3      3    24.66667
+    ## 4      4    23.66667
+    ## 5      5    25.00000
+    ## 6      6    23.66667
+    ## 7      7    26.66667
+    ## 8      8    23.33333
+    ## 9      9    22.66667
+    ## 10    10    24.00000
+    ## ..   ...         ...
+
+``` r
+# Table shows mean (mean(Value)) of three measurements for each subject (ID)
+```

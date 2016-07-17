@@ -1,8 +1,9 @@
 ---
-title: "Assignment 1"
+title: "Assignment"
 author: "Ninette Lotter"
 output: github_document
 ---
+##### Assignment 1
 
 ## Hello Octocat
 
@@ -10,17 +11,65 @@ I love Octocat. She's the coolest cat in town.
 
 ![](https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/images/octocat.png)
 
+##### Assignment 2
+
+###### Quick look
 ```{r, quick look, echo=TRUE}
+# Load data
 data("anscombe")
+# Dimensions
 dim(anscombe)
+# Column names
 names(anscombe)
+# First and last 6 lines of data
 head(anscombe, n=6)
 tail(anscombe, n=6)
+# Summary statistics
 summary(anscombe)
 ```
 
+##### Assignment 3
+
+###### XY Plot
 ```{r xy_plot, echo=FALSE, fig.align='center', fig.width=8, fig.height=8, dev='svg', fig.path='./figures/'}
 data("anscombe")
+# Scatterplot
 plot(anscombe$x1, anscombe$y1)
+# Add abline showing linear regression
 abline(lm(y1 ~ x1, data = anscombe))
+```
+
+##### Assignment 4
+
+###### Importing data
+```{r data_import, echo=TRUE}
+#Use readr package to read data from url and store dataframe into object called 'df'.
+df <- read.csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/analgesic.csv')
+```
+
+###### Summarising a dataset
+```{r data_summary, echo=TRUE}
+# Dimensions 
+dim(df)
+# Names of columns
+names(df)
+# First and last 6 lines of data
+head(df, n=6)
+tail(df, n=6)
+# Summary statistics
+summary(df)
+```
+
+###### Tidying data
+```{r data_tidy, echo=TRUE}
+# Load packages
+library(tidyr)
+library(dplyr)
+# Tidy data from wide to long format
+gathered <- gather(df, key = Measurement, value = Value, Measurement_1:Measurement_3)
+# Summarize data by calculating mean across the measurements for each individual
+summary <- summarise(group_by(gathered, ID), mean(Value))
+# Print final data frame
+print(summary)
+# Table shows mean (mean(Value)) of three measurements for each subject (ID)
 ```
