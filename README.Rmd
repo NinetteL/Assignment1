@@ -19,7 +19,7 @@ tail(anscombe, n=6)
 summary(anscombe)
 ```
 
-```{r, xy_plot, echo=FALSE, fig.align='center', fig.width=8, fig.height=8, dev='svg', fig.path='\\NINETTE\\Users\\Ninette\\Desktop\\Assignments\\Assignment'}
+```{r, xy_plot, echo=FALSE, fig.align='center', fig.width=8, fig.height=8, dev='svg', fig.path='\\NINETTE\\Users\\Ninette\\Desktop\\Assignments\\Assignment\\figures'}
 data("anscombe")
 plot(anscombe$x1, anscombe$y1)
 abline(lm(y1 ~ x1, data = anscombe))
