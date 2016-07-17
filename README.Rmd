@@ -9,3 +9,12 @@ output: github_document
 I love Octocat. She's the coolest cat in town.
 
 ![](https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/images/octocat.png)
+
+```{r, quick look, echo=TRUE}
+data("anscombe")
+dim(anscombe)
+names(anscombe)
+head(anscombe, n=6)
+tail(anscombe, n=6)
+summary(anscombe)
+```
