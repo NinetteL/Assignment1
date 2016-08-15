@@ -3,7 +3,7 @@ title: "Assignment"
 author: "Ninette Lotter"
 output: github_document
 ---
-##### Assignment 1
+### Assignment 1
 
 ## Hello Octocat
 
@@ -11,10 +11,10 @@ I love Octocat. She's the coolest cat in town.
 
 ![](https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/images/octocat.png)
 
-##### Assignment 2
+### Assignment 2
 
 ###### Quick look
-```{r, quick look, echo=TRUE}
+```{r quick look, echo=TRUE, warning=FALSE}
 # Load data
 data("anscombe")
 # Dimensions
@@ -28,10 +28,10 @@ tail(anscombe, n=6)
 summary(anscombe)
 ```
 
-##### Assignment 3
+### Assignment 3
 
 ###### XY Plot
-```{r xy_plot, echo=FALSE, fig.align='center', fig.width=8, fig.height=8, dev='svg', fig.path='./figures/'}
+```{r xy_plot, warning=FALSE, echo=FALSE, fig.align='center', fig.height=8, fig.width=8, fig.path= './figures/', dev='svg'}
 data("anscombe")
 # Scatterplot
 plot(anscombe$x1, anscombe$y1)
@@ -39,16 +39,16 @@ plot(anscombe$x1, anscombe$y1)
 abline(lm(y1 ~ x1, data = anscombe))
 ```
 
-##### Assignment 4
+### Assignment 4
 
 ###### Importing data
-```{r data_import, echo=TRUE}
+```{r data_import, echo=TRUE, warning=FALSE}
 #Use readr package to read data from url and store dataframe into object called 'df'.
-df <- read.csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/analgesic.csv')
+df <- readr::read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/analgesic.csv')
 ```
 
 ###### Summarising a dataset
-```{r data_summary, echo=TRUE}
+```{r data_summary, echo=TRUE, warning=FALSE}
 # Dimensions 
 dim(df)
 # Names of columns
@@ -61,7 +61,7 @@ summary(df)
 ```
 
 ###### Tidying data
-```{r data_tidy, echo=TRUE}
+```{r data_tidy, echo=TRUE, warning=FALSE}
 # Load packages
 library(tidyr)
 library(dplyr)
@@ -71,5 +71,130 @@ gathered <- gather(df, key = Measurement, value = Value, Measurement_1:Measureme
 summary <- summarise(group_by(gathered, ID), mean(Value))
 # Print final data frame
 print(summary)
-# Table shows mean (mean(Value)) of three measurements for each subject (ID)
 ```
+
+
+### Chicken weights
+
+**Null hypothesis:** There is no difference in weight of chickens on different feeds.
+
+**Alternative hypothesis:** Different feeds result in differences in chicken weights.
+
+```{r chicken_weights, echo=TRUE, warning=FALSE}
+# Load packages
+library(dplyr)
+library(tidyr)
+# Import data
+chicks <- readr::read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/chick-weights.csv?dl=1')
+sum
+# Plot data
+boxplot(weight~feed, data = chicks)
+# Run statistical test
+anova <- aov(weight~feed, data = chicks)
+summary(anova)
+# Perform post-hoc test to correct for multiple comparisons
+pairwise.t.test(chicks$weight, chicks$feed, p.adjust.method = 'holm', paired = FALSE)
+```
+Statistical test: One-way ANOVA
+Post-hoc test: Holm's multiple comparison test
+
+Assumptions that underlie test:
+
+* Data are normally distributed.
+* Equal variance across groups.
+* The errors are independent.
+* Data are unmatched.
+
+Test statistic: F-value = 15.37
+
+Degrees of freedom: 5
+
+p value: p < 0.05
+
+**Conclusion:** The different feeds had  significant effect on weight of chickens (F = 15.37). The weight of chickens fed casein feed was higher than the weight of chickens fed horsebean (p = 2.9e-08), linseed (p = 0.00016) and soybean (p = 0.00532) feeds. The difference in weight between chickens fed casein feed was not significantly different from the weight of chickens fed meatmeal (p = 0.18227) and sunflower (p = 0.81249) feeds. We can therefore reject the null hypothesis because there are differences in the weight of chickens fed different feeds.
+
+
+### Hot Zone
+
+**Null hypothesis:** Water consumption has no effect on the prevalence of gastroenteritis.
+
+**Alternative hypothesis:** The prevalence of gastroenteritis is affected by the amount of water consumed.
+
+```{r hot_zone, echo=TRUE, warning=FALSE}
+library(tidyr)
+library(dplyr)
+# Import data
+hot <- readr::read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/gastroenteritis.csv?dl=1')
+# Explore data
+head(hot)
+tail(hot)
+# Cross tabulate the data into contingency table
+tab <- table(hot$Consumption, hot$Outcome)
+# Plot data
+barplot(tab, beside = TRUE, legend.text = TRUE, ylim = c(0, 300), col = c('aquamarine', 'blueviolet', 'gold'))
+# Statistical test
+tab_1 <- tab[-3,]
+tab_1p <- fisher.test(tab_1)$p.value
+tab_1p
+tab_2 <- tab[-2,]
+tab_2p <- fisher.test(tab_2)$p.value
+tab_2p
+tab_3 <- tab[-1,]
+tab_3p <- fisher.test(tab_3)$p.value
+tab_3p
+# Adjust p-values 
+p.adjust(c(tab_1p, tab_2p, tab_3p), method = 'holm')
+tab
+```
+
+Statistical test: Fisher's Exact test
+
+Assumptions:
+
+* Random sampling
+* Observations are independent
+* Large sample, with adequate expected cell counts
+
+p value: p < 0.05
+
+**Conclusion:** The result show that water consumption has a significant effect on disease outcome. The proportion of people who fell ill after consuming less than 1 glass of water per day is significantly different from the proportion of people who fell ill after consuming 1 to 4 glasses per day (p = 5.167e-09) and more than 4 glasses per day (p = 2.705e-05). We can therefore reject the null hypothesis because there is an effect of water consumption on the number of people who fell ill. 
+
+
+### Nausea
+
+**Null hypothesis:** There is no difference in nausea intensity score before and after receiving 5HT3-receptor blocker.
+
+**Alternative hypothesis:** The nausea intensity score is decreased after administration of 5HT3-receptor blocker.
+
+```{r nausea, echo=TRUE, warning=FALSE}
+# Load packages
+library(tidyr)
+library(dplyr)
+library(vcdExtra)
+# Import data
+nausea <- readr::read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/nausea.csv?dl=1')
+# Exclude outlier
+nausea_new <- nausea[-8, -1]
+# Summarise data
+summary(nausea_new)
+# Plot data
+boxplot(nausea_new)
+# Run statistical test
+wilcox.test(nausea_new$Nausea_before, nausea_new$Nausea_after, paired = TRUE)
+```
+
+Statistical test: Wilcoxon signed-rank test
+
+Assumptions for non-parametric tests:
+
+* The errors are inependent.
+* Samples are drawn from populations with the same shape distributions.
+* Matching is effective.
+
+Test statistic: V = 26
+
+Degrees of freedom: 6
+
+p value: p = 0.04983
+
+**Conclusion:** The median of nausea rating before is 4 while the median for nausea rating after is 1. The Wilcoxon signed-rank test shows that there is a significant effect of group (V = 26, p = 0.04983). We can therefore accept the null hypothesis that there is a difference in nausea intensity rating and, by looking at the data, we confirm that the difference is a decrease in the nausea rating.
