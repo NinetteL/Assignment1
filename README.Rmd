@@ -198,3 +198,54 @@ Degrees of freedom: 6
 p value: p = 0.04983
 
 **Conclusion:** The median of nausea rating before is 4 while the median for nausea rating after is 1. The Wilcoxon signed-rank test shows that there is a significant effect of group (V = 26, p = 0.04983). We can therefore accept the null hypothesis that there is a difference in nausea intensity rating and, by looking at the data, we confirm that the difference is a decrease in the nausea rating.
+
+### Housing prices
+
+**Null hypothesis:** There is no correlation between interest rate and median house prices.
+
+**Alternative hypothesis:** There is a correlation between interest rate and median house prices.
+
+```{r housing_prices, echo=TRUE, warning=FALSE}
+# Load packages
+library(tidyr)
+library(dplyr)
+# Load dataset
+hp <- readr::read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/housing-prices.csv?dl=1')
+# Exclude NA value row
+hp_new <- hp[-17, ]
+# Rename columns for easy coding
+price <- hp_new$median_house_price_USD
+IR <- hp_new$interest_rate
+# Linear regression
+lin <- lm(price ~ IR, data = hp_new)
+# View model
+summary(lin)
+# Exploratory figure
+plot(hp_new, main='Correlation between interest rate and median house prices (USD)', xlab='Interest Rate', ylab='Median House Prices (US$)', cex.main=1.1, cex.lab=1, cex.axis=1, fig.width=10, fig.height=10, fig.align='center', cex=1, col='darkorchid')
+# Regression line
+abline(lm(price ~ IR, data = hp_new))
+# Diagnostic plots
+plot(x = lin$fitted, y = lin$residuals)
+abline(h = 0)
+qqnorm(lin$residuals)
+qqline(lin$residuals)
+```
+
+Statistical test: Linear regression model
+
+Assumptions for linear regression:
+
+* There is a linear trend between x and y.
+* The observations in the sample are independent.
+* x is measured without error.
+* The residuals are normally distributed.
+* The residuals have the same variance for all fitted values of y (homoskedastic).
+
+Test statistic: F-statistic = 6.974
+
+Degrees of freedom: 14
+
+P-value: p = 0.0194
+
+**Conclusion:** There is a significant correlation (p = 0.019) between interest rate and median house prices. Therefore we can reject the null hypothesis.
+
